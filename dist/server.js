@@ -160,15 +160,7 @@ io.on('connection', function (socket) {
                 io.emit('message', 'presence', users);
               }
 
-              if (!(action === 'message')) {
-                _context3.next = 4;
-                break;
-              }
-
-              _context3.next = 4;
-              return io.in('chat').emit('message', 'message', data);
-
-            case 4:
+            case 1:
             case 'end':
               return _context3.stop();
           }

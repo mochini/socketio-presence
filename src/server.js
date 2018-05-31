@@ -82,12 +82,6 @@ io.on('connection', (socket) => {
 
     }
 
-    if(action === 'message') {
-
-      await io.in('chat').emit('message', 'message', data)
-
-    }
-
   })
 
 })

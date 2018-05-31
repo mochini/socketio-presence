@@ -72,12 +72,6 @@ class App extends React.Component {
     })
   }
 
-  _handleTypeMessage() {
-    this.setState({
-      message: this.message.value
-    })
-  }
-
   _handleJoin() {
     const { name } = this.state
     this.client.emit('join', name, () => {
@@ -97,16 +91,6 @@ class App extends React.Component {
 
   _handleReceive(action, data) {
     if(action === 'presence') this._handlePresence(data)
-  }
-
-  _handleMessage(message) {
-    const { log } = this.state
-    this.setState({
-      log: [
-        ...log,
-        message
-      ]
-    })
   }
 
   _handleBlur() {
