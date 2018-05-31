@@ -1,0 +1,48 @@
+.form {
+  padding: 0.8em;
+}
+.application {
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 0.8em;
+  display: flex;
+  width: 100%;
+  max-width: 375px;
+}
+.left {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.right {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+.top {
+  background-color: rgba(0,0,0,0.05);
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+  padding: 0.8em;
+}
+.bottom {
+  padding: 0.8em;
+  flex: 0 0 30em;
+}
+.fields {
+  margin: 0 !important;
+}
+.message {
+  line-height: 1.6em;
+}
+.status {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.active {
+  background-color: #21ba45;
+}
+.abandoned {
+  background-color: #fbbd08;
+}
