@@ -9,12 +9,12 @@ class App extends React.Component {
     users: []
   }
 
-  _handleTypeName = this._handleTypeName.bind(this)
-  _handleReceive = this._handleReceive.bind(this)
-  _handleLeave = this._handleLeave.bind(this)
-  _handleFocus = this._handleFocus.bind(this)
-  _handleJoin = this._handleJoin.bind(this)
-  _handleBlur = this._handleBlur.bind(this)
+  _handleBlurFocus = this._handleBlurFocus.bind(this)
+  _handleConnect = this._handleConnect.bind(this)
+  _handlePresence = this._handlePresence.bind(this)
+  _handleSignin = this._handleSignin.bind(this)
+  _handleSignout = this._handleSignout.bind(this)
+  _handleName = this._handleName.bind(this)
 
   render() {
     const { joined, log, messages, name, users } = this.state
@@ -27,13 +27,13 @@ class App extends React.Component {
                 <div className="field">
                   { joined ?
                     <input disabled className="ui disabled input" type="text" defaultValue={ name } /> :
-                    <input ref={ node => this.name = node } className="ui input" type="text" onChange={ this._handleTypeName } />
+                    <input ref={ node => this.name = node } className="ui input" type="text" onChange={ this._handleName } />
                   }
                 </div>
                 <div className="field">
                   { joined ?
-                    <button className="ui button" onClick={ this._handleLeave }>Leave</button> :
-                    <button className="ui button" onClick={ this._handleJoin }>Join</button>
+                    <button className="ui button" onClick={ this._handleSignout }>Signout</button> :
+                    <button className="ui button" onClick={ this._handleSignin }>Signin</button>
                   }
                 </div>
               </div>
@@ -56,58 +56,54 @@ class App extends React.Component {
 
   componentDidMount() {
     this.client = SocketClient('http://localhost:3000')
-    this.client.on('message', this._handleReceive)
-    window.addEventListener('blur', this._handleBlur, false)
-    window.addEventListener('focus', this._handleFocus, false)
+    this.client.on('connect', this._handleConnect)
+    this.client.on('presence', this._handlePresence)
+    window.addEventListener('blur', this._handleBlurFocus, false)
+    window.addEventListener('focus', this._handleBlurFocus, false)
   }
 
   componentWillUnmount() {
-    window.removeEventListener('blur', this._handleBlur)
-    window.removeEventListener('focus', this._handleFocus)
+    window.removeEventListener('blur', this._handleBlurFocus)
+    window.removeEventListener('focus', this._handleBlurFocus)
   }
 
-  _handleTypeName() {
+  _handleName() {
     this.setState({
       name: this.name.value
     })
   }
 
-  _handleJoin() {
+  _handleConnect() {
+    const { joined } = this.state
+    if(joined) this._handleSignin()
+  }
+
+  _handleSignin() {
     const { name } = this.state
-    this.client.emit('join', name, () => {
+    this.client.emit('signin', {
+      name,
+      status: document.hasFocus() ? 'active' : 'absent'
+    }, () => {
       this.setState({
         joined: true
       })
     })
   }
 
-  _handleLeave() {
-    this.client.emit('leave', () => {
+  _handleSignout() {
+    this.client.emit('signout', () => {
       this.setState({
         joined: false
       })
     })
   }
 
-  _handleReceive(action, data) {
-    if(action === 'presence') this._handlePresence(data)
-  }
-
-  _handleBlur() {
+  _handleBlurFocus() {
     const { name } = this.state
     if(name === '') return
-    this.client.emit('message', 'presence', {
+    this.client.emit('presence', {
       name,
-      status: 'abandoned'
-    })
-  }
-
-  _handleFocus() {
-    const { name } = this.state
-    if(name === '') return
-    this.client.emit('message', 'presence', {
-      name,
-      status: 'active'
+      status: document.hasFocus() ? 'active' : 'absent'
     })
   }
 

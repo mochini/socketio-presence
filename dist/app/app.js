@@ -4,10 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _toConsumableArray2 = require('babel-runtime/helpers/toConsumableArray');
-
-var _toConsumableArray3 = _interopRequireDefault(_toConsumableArray2);
-
 var _classCallCheck2 = require('babel-runtime/helpers/classCallCheck');
 
 var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
@@ -52,7 +48,7 @@ var App = function (_React$Component) {
       joined: false,
       name: '',
       users: []
-    }, _this._handleTypeName = _this._handleTypeName.bind(_this), _this._handleReceive = _this._handleReceive.bind(_this), _this._handleLeave = _this._handleLeave.bind(_this), _this._handleFocus = _this._handleFocus.bind(_this), _this._handleJoin = _this._handleJoin.bind(_this), _this._handleBlur = _this._handleBlur.bind(_this), _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
+    }, _this._handleBlurFocus = _this._handleBlurFocus.bind(_this), _this._handleConnect = _this._handleConnect.bind(_this), _this._handlePresence = _this._handlePresence.bind(_this), _this._handleSignin = _this._handleSignin.bind(_this), _this._handleSignout = _this._handleSignout.bind(_this), _this._handleName = _this._handleName.bind(_this), _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
   }
 
   (0, _createClass3.default)(App, [{
@@ -87,19 +83,19 @@ var App = function (_React$Component) {
                   { className: 'field' },
                   joined ? _react2.default.createElement('input', { disabled: true, className: 'ui disabled input', type: 'text', defaultValue: name }) : _react2.default.createElement('input', { ref: function ref(node) {
                       return _this2.name = node;
-                    }, className: 'ui input', type: 'text', onChange: this._handleTypeName })
+                    }, className: 'ui input', type: 'text', onChange: this._handleName })
                 ),
                 _react2.default.createElement(
                   'div',
                   { className: 'field' },
                   joined ? _react2.default.createElement(
                     'button',
-                    { className: 'ui button', onClick: this._handleLeave },
-                    'Leave'
+                    { className: 'ui button', onClick: this._handleSignout },
+                    'Signout'
                   ) : _react2.default.createElement(
                     'button',
-                    { className: 'ui button', onClick: this._handleJoin },
-                    'Join'
+                    { className: 'ui button', onClick: this._handleSignin },
+                    'Signin'
                   )
                 )
               )
@@ -128,88 +124,67 @@ var App = function (_React$Component) {
     key: 'componentDidMount',
     value: function componentDidMount() {
       this.client = (0, _socket2.default)('http://localhost:3000');
-      this.client.on('message', this._handleReceive);
-      window.addEventListener('blur', this._handleBlur, false);
-      window.addEventListener('focus', this._handleFocus, false);
+      this.client.on('connect', this._handleConnect);
+      this.client.on('presence', this._handlePresence);
+      window.addEventListener('blur', this._handleBlurFocus, false);
+      window.addEventListener('focus', this._handleBlurFocus, false);
     }
   }, {
     key: 'componentWillUnmount',
     value: function componentWillUnmount() {
-      window.removeEventListener('blur', this._handleBlur);
-      window.removeEventListener('focus', this._handleFocus);
+      window.removeEventListener('blur', this._handleBlurFocus);
+      window.removeEventListener('focus', this._handleBlurFocus);
     }
   }, {
-    key: '_handleTypeName',
-    value: function _handleTypeName() {
+    key: '_handleName',
+    value: function _handleName() {
       this.setState({
         name: this.name.value
       });
     }
   }, {
-    key: '_handleTypeMessage',
-    value: function _handleTypeMessage() {
-      this.setState({
-        message: this.message.value
-      });
+    key: '_handleConnect',
+    value: function _handleConnect() {
+      var joined = this.state.joined;
+
+      if (joined) this._handleSignin();
     }
   }, {
-    key: '_handleJoin',
-    value: function _handleJoin() {
+    key: '_handleSignin',
+    value: function _handleSignin() {
       var _this3 = this;
 
       var name = this.state.name;
 
-      this.client.emit('join', name, function () {
+      this.client.emit('signin', {
+        name: name,
+        status: document.hasFocus() ? 'active' : 'absent'
+      }, function () {
         _this3.setState({
           joined: true
         });
       });
     }
   }, {
-    key: '_handleLeave',
-    value: function _handleLeave() {
+    key: '_handleSignout',
+    value: function _handleSignout() {
       var _this4 = this;
 
-      this.client.emit('leave', function () {
+      this.client.emit('signout', function () {
         _this4.setState({
           joined: false
         });
       });
     }
   }, {
-    key: '_handleReceive',
-    value: function _handleReceive(action, data) {
-      if (action === 'presence') this._handlePresence(data);
-    }
-  }, {
-    key: '_handleMessage',
-    value: function _handleMessage(message) {
-      var log = this.state.log;
-
-      this.setState({
-        log: [].concat((0, _toConsumableArray3.default)(log), [message])
-      });
-    }
-  }, {
-    key: '_handleBlur',
-    value: function _handleBlur() {
+    key: '_handleBlurFocus',
+    value: function _handleBlurFocus() {
       var name = this.state.name;
 
       if (name === '') return;
-      this.client.emit('message', 'presence', {
+      this.client.emit('presence', {
         name: name,
-        status: 'abandoned'
-      });
-    }
-  }, {
-    key: '_handleFocus',
-    value: function _handleFocus() {
-      var name = this.state.name;
-
-      if (name === '') return;
-      this.client.emit('message', 'presence', {
-        name: name,
-        status: 'active'
+        status: document.hasFocus() ? 'active' : 'absent'
       });
     }
   }, {
