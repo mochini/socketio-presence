@@ -1,5 +1,6 @@
-import React from 'react'
 import SocketClient from 'socket.io-client'
+import { hot } from 'react-hot-loader'
+import React from 'react'
 
 class App extends React.Component {
 
@@ -55,7 +56,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.client = SocketClient('http://localhost:3000')
+    this.client = SocketClient('http://localhost:3001')
     this.client.on('connect', this._handleConnect)
     this.client.on('presence', this._handlePresence)
     window.addEventListener('blur', this._handleBlurFocus, false)
@@ -115,4 +116,4 @@ class App extends React.Component {
 
 }
 
-export default App
+export default hot(module)(App)
