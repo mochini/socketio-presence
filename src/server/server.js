@@ -1,9 +1,9 @@
-import config from './config/webpack.config'
+import config from '../config/webpack.config'
 import devServer from 'webpack-dev-server'
 import socketio from 'socket.io'
 import webpack from 'webpack'
 import express from 'express'
-import presence from './middleware/presence'
+import presence from './presence'
 import http from 'http'
 import path from 'path'
 
