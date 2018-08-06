@@ -98,8 +98,7 @@ class App extends React.Component {
   _handleBlurFocus() {
     const { name } = this.state
     if(name === '') return
-    this.client.emit('presence', {
-      name,
+    this.client.emit('status', {
       status: document.hasFocus() ? 'active' : 'absent'
     })
   }

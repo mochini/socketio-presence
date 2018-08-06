@@ -19,7 +19,9 @@ socket.listen(3001, () => {
 
 const server = new devServer(webpack(config), {
   hot: true,
-  stats: 'errors-only'
+  stats: 'errors-only',
+  open: true,
+  openPage: 'http://localhost:3000'
 })
 
 server.listen(3000, null, () => {

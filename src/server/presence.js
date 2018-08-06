@@ -10,6 +10,8 @@ const presence = (io, socket) => {
 
     user = data.name
 
+    console.log(`${user} signed in`)
+
     users = [ ...users, data ]
 
     io.emit('presence', users)
@@ -18,7 +20,9 @@ const presence = (io, socket) => {
 
   })
 
-  socket.on('signout', async (callback) => {
+  socket.on('signout', (callback) => {
+
+    console.log(`${user} signed out`)
 
     users = users.filter(item => item.name !== user)
 
@@ -30,9 +34,11 @@ const presence = (io, socket) => {
 
   })
 
-  socket.on('disconnect', async () => {
+  socket.on('disconnect', () => {
 
     if(!user) return
+
+    console.log(`${user} disconnected`)
 
     users = users.filter(item => item.name !== user)
 
@@ -42,11 +48,13 @@ const presence = (io, socket) => {
 
   })
 
-  socket.on('presence', async (data, callback = () => {}) => {
+  socket.on('status', async (data, callback = () => {}) => {
 
-    users = users.map(user => ({
-      ...user,
-      status: user.name === data.name ? data.status : user.status
+    console.log(`${data.name} is ${data.status}`)
+
+    users = users.map(item => ({
+      ...item,
+      status: item.name === user ? data.status : item.status
     }))
 
     io.emit('presence', users)
