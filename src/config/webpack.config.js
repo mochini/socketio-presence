@@ -6,7 +6,8 @@ const config = {
   entry: [
     'webpack-dev-server/client?http://localhost:3000',
     'webpack/hot/dev-server',
-    path.resolve('src','app','index.js')
+    path.resolve('src','app','index.js'),
+    path.resolve('src','app','style.less')
   ],
   output: {
     filename: 'application.js'
@@ -14,6 +15,14 @@ const config = {
   module: {
     rules: [
       {
+        test: /\.less$/,
+        exclude: /node_modules/,
+        use: [
+          'style-loader',
+          'css-loader?url=false',
+          'less-loader'
+        ]
+      }, {
         test: /\.js$/,
         exclude: /node_modules/,
         use: [

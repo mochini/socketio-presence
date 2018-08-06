@@ -3,33 +3,23 @@ import devServer from 'webpack-dev-server'
 import socketio from 'socket.io'
 import webpack from 'webpack'
 import express from 'express'
-import socket from './socket'
+import presence from './middleware/presence'
 import http from 'http'
 import path from 'path'
 
-const transport = http.createServer()
+const socket = http.createServer()
 
-const io = socketio(transport)
+const io = socketio(socket)
 
-io.on('connection', (sock) => socket(io, sock))
+io.on('connection', (socket) => presence(io, socket))
 
-transport.listen(3001, () => {
+socket.listen(3001, () => {
   console.log('Socket listening on 3001')
 })
 
 const server = new devServer(webpack(config), {
-  contentBase: path.join('src', 'public'),
-  compress: true,
   hot: true,
-  // stats: 'errors-only',
-  watchContentBase: true,
-  open: true,
-  historyApiFallback: {
-    disableDotRule: true,
-    rewrites: [
-      { from: /.*/, to: "index.html" },
-    ]
-  }
+  stats: 'errors-only'
 })
 
 server.listen(3000, null, () => {

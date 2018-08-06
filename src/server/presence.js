@@ -1,6 +1,6 @@
 let users = []
 
-const socket = (io, socket) => {
+const presence = (io, socket) => {
 
   let user = null
 
@@ -55,4 +55,4 @@ const socket = (io, socket) => {
 
 }
 
-export default socket
+export default presence

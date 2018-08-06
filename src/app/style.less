@@ -1,0 +1,43 @@
+@black: #000000;
+@green: #21BA45;
+@yellow: #FBBD08;
+
+body {
+  padding: 0.8em;
+}
+.presence {
+  border: 1px solid fadeout(@black, 90);
+  border-radius: 0.8em;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 375px;
+}
+.presence-top {
+  background-color: fadeout(@black, 95);
+  border-bottom: 1px solid fadeout(@black, 90);
+  padding: 0.8em;
+}
+.presence-bottom {
+  padding: 0.8em;
+  flex: 0 0 400px;
+}
+.fields {
+  margin: 0 !important;
+}
+.message {
+  line-height: 1.6em;
+}
+.status {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.active {
+  background-color: @green;
+}
+.absent {
+  background-color: @yellow;
+}

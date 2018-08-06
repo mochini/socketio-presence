@@ -20,36 +20,32 @@ class App extends React.Component {
   render() {
     const { joined, log, messages, name, users } = this.state
     return (
-      <div className="ui form">
-        <div className="application">
-          <div className="left">
-            <div className="top">
-              <div className="fields">
-                <div className="field">
-                  { joined ?
-                    <input disabled className="ui disabled input" type="text" defaultValue={ name } /> :
-                    <input ref={ node => this.name = node } className="ui input" type="text" onChange={ this._handleName } />
-                  }
-                </div>
-                <div className="field">
-                  { joined ?
-                    <button className="ui button" onClick={ this._handleSignout }>Signout</button> :
-                    <button className="ui button" onClick={ this._handleSignin }>Signin</button>
-                  }
-                </div>
+      <div className="presence">
+        <div className="presence-top">
+          <div className="ui form">
+            <div className="fields">
+              <div className="field">
+                { joined ?
+                  <input disabled className="ui disabled input" type="text" defaultValue={ name } /> :
+                  <input ref={ node => this.name = node } className="ui input" type="text" onChange={ this._handleName } />
+                }
               </div>
-            </div>
-            <div className="bottom">
-              <div className="users">
-                { users.map((user, index) => (
-                  <div className="user" key={`user_${index}`}>
-                    <div className={`status ${user.status}`} />
-                    { user.name }
-                  </div>
-                )) }
+              <div className="field">
+                { joined ?
+                  <button className="ui button" onClick={ this._handleSignout }>Signout</button> :
+                  <button className="ui button" onClick={ this._handleSignin }>Signin</button>
+                }
               </div>
             </div>
           </div>
+        </div>
+        <div className="presence-bottom">
+          { users.map((user, index) => (
+            <div className="user" key={`user_${index}`}>
+              <div className={`status ${user.status}`} />
+              { user.name }
+            </div>
+          )) }
         </div>
       </div>
     )

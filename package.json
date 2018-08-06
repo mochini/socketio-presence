@@ -4,7 +4,7 @@
   "description": "User presence experiment",
   "main": "index.js",
   "scripts": {
-    "start": "babel-node ./src/server.js"
+    "start": "babel-node ./src/server/server.js"
   },
   "repository": {
     "type": "git",
@@ -31,11 +31,14 @@
     "webpack-dev-server": "^3.1.4"
   },
   "dependencies": {
+    "css-loader": "^1.0.0",
     "express": "^4.16.3",
+    "less-loader": "^4.1.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "socket.io": "^2.1.1",
     "socket.io-client": "^2.1.1",
+    "style-loader": "^0.21.0",
     "webpack-cli": "^2.1.4"
   }
 }
