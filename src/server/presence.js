@@ -50,7 +50,7 @@ const presence = (io, socket) => {
 
   socket.on('status', async (data, callback = () => {}) => {
 
-    console.log(`${data.name} is ${data.status}`)
+    console.log(`${user} is ${data.status}`)
 
     users = users.map(item => ({
       ...item,
